@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Global Spoken English - Results</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -143,6 +143,40 @@
             margin: 30px 0;
             font-size: 16px;
         }
+        .certificate {
+            position: absolute;
+            left: -9999px;
+            width: 800px;
+            padding: 40px;
+            background: white;
+            border: 2px solid #d32f2f;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .certificate-header {
+            color: #d32f2f;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .certificate-body {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .certificate-student {
+            font-size: 28px;
+            color: #d32f2f;
+            margin: 20px 0;
+        }
+        .certificate-details {
+            margin: 30px 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+            padding: 20px 0;
+        }
+        .certificate-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
         @media (max-width: 600px) {
             .container {
                 padding: 15px;
@@ -160,6 +194,10 @@
             .download-btn {
                 padding: 4px 8px;
                 font-size: 11px;
+            }
+            .certificate {
+                width: 95%;
+                padding: 20px;
             }
         }
     </style>
@@ -200,14 +238,36 @@
         </table>
     </div>
 
-    <script>
-        // Initialize jsPDF
-        const { jsPDF } = window.jspdf;
+    <!-- Hidden certificate template for JPG generation -->
+    <div id="certificateTemplate" class="certificate">
+        <div class="certificate-header">
+            <h1>Global Spoken English</h1>
+            <h2>Certificate of Achievement</h2>
+        </div>
+        <div class="certificate-body">
+            <p>This is to certify that</p>
+            <div class="certificate-student" id="certStudentName"></div>
+            <p>son/daughter of <span id="certFatherName"></span></p>
+            <p>has successfully completed the course with the following marks:</p>
+        </div>
+        <div class="certificate-details">
+            <p>Roll No.: <span id="certRollNo"></span></p>
+            <p>Max Marks: <span id="certMaxMarks"></span></p>
+            <p>Obtained Marks: <span id="certObtainedMarks"></span></p>
+            <p>Percentage: <span id="certPercentage"></span></p>
+            <p>Rank: <span id="certRank"></span></p>
+        </div>
+        <div class="certificate-footer">
+            <div>Date: <span id="certDate"></span></div>
+            <div>Authorized Signature</div>
+        </div>
+    </div>
 
+    <script>
         // Student Data
         const students = [
             { rank: 1, rollNo: "S-Ramzan-12", name: "Mohd Aashique", fatherName: "Mohd Naushad Rain", maxMarks: 100, obtainedMarks: -1 },
-            { rank: 2, rollNo: "S-Ramzan-10", name: "Abdul Razique", fatherName: "Abdul Rajja", maxMarks: 100, obtainedMarks: -1 },
+            { rank: 2, rollNo: "S-Ramzan-10", name: "Abdul Razique", fatherName: "Abdul Rajja", maxMarks: 100, obtainedMarks: -1},
             { rank: 3, rollNo: "S-Ramzan-02", name: "Md Sahil", fatherName: "Md Rahmatullah", maxMarks: 100, obtainedMarks: -1 },
             { rank: 4, rollNo: "S-Ramzan-03", name: "Md Aman", fatherName: "Md Imteyaz", maxMarks: 100, obtainedMarks: 63 },
             { rank: 5, rollNo: "S-Ramzan-01", name: "Abdul Wahid", fatherName: "Mohd Alam", maxMarks: 100, obtainedMarks: 60 },
@@ -276,14 +336,14 @@
                     <td>${student.fatherName}</td>
                     <td>${student.maxMarks}</td>
                     <td>${student.obtainedMarks}</td>
-                    <td><button class="download-btn" onclick="downloadCurrentResult('${student.rollNo}')">Download</button></td>
+                    <td><button class="download-btn" onclick="downloadCertificate('${student.rollNo}')">Download JPG</button></td>
                 `;
                 tableBody.appendChild(row);
             });
         }
 
-        // Download current result
-        function downloadCurrentResult(rollNo) {
+        // Download certificate as JPG
+        function downloadCertificate(rollNo) {
             // Find the student in currently displayed results
             const student = currentDisplayedStudents.find(s => s.rollNo === rollNo);
             if (!student) {
@@ -291,71 +351,26 @@
                 return;
             }
 
-            generatePDF(student);
-        }
+            // Populate certificate template
+            document.getElementById('certStudentName').textContent = student.name;
+            document.getElementById('certFatherName').textContent = student.fatherName;
+            document.getElementById('certRollNo').textContent = student.rollNo;
+            document.getElementById('certMaxMarks').textContent = student.maxMarks;
+            document.getElementById('certObtainedMarks').textContent = student.obtainedMarks;
+            document.getElementById('certPercentage').textContent = `${(student.obtainedMarks/student.maxMarks*100).toFixed(2)}%`;
+            document.getElementById('certRank').textContent = student.rank;
+            document.getElementById('certDate').textContent = new Date().toLocaleDateString();
 
-        // Generate PDF certificate
-        function generatePDF(student) {
-            const doc = new jsPDF({
-                orientation: 'landscape',
-                unit: 'mm'
+            // Generate JPG from certificate template
+            const certificateElement = document.getElementById('certificateTemplate');
+            
+            html2canvas(certificateElement).then(canvas => {
+                // Convert canvas to JPG and download
+                const link = document.createElement('a');
+                link.download = `Certificate_${student.rollNo}_${student.name.replace(/ /g, '_')}.jpg`;
+                link.href = canvas.toDataURL('image/jpeg', 1.0);
+                link.click();
             });
-
-            // Add decorative border
-            doc.setDrawColor(211, 47, 47);
-            doc.setLineWidth(1);
-            doc.rect(10, 10, 277, 190);
-
-            // Header
-            doc.setFontSize(24);
-            doc.setTextColor(211, 47, 47);
-            doc.text("GLOBAL SPOKEN ENGLISH", 148, 30, { align: 'center' });
-            
-            doc.setFontSize(18);
-            doc.text("Certificate of Achievement", 148, 40, { align: 'center' });
-
-            // Student details
-            doc.setFontSize(14);
-            doc.setTextColor(0, 0, 0);
-            doc.text(`This is to certify that`, 148, 60, { align: 'center' });
-            
-            doc.setFontSize(24);
-            doc.setTextColor(211, 47, 47);
-            doc.text(student.name, 148, 75, { align: 'center' });
-            
-            doc.setFontSize(14);
-            doc.setTextColor(0, 0, 0);
-            doc.text(`son/daughter of ${student.fatherName}`, 148, 85, { align: 'center' });
-            doc.text(`has successfully completed the course with the following marks:`, 148, 95, { align: 'center' });
-
-            // Marks table
-            doc.autoTable({
-                startY: 110,
-                head: [['Roll No.', 'Max Marks', 'Obtained Marks', 'Percentage', 'Rank']],
-                body: [
-                    [
-                        student.rollNo, 
-                        student.maxMarks, 
-                        student.obtainedMarks,
-                        `${(student.obtainedMarks/student.maxMarks*100).toFixed(2)}%`,
-                        student.rank
-                    ]
-                ],
-                theme: 'grid',
-                headStyles: { 
-                    fillColor: [211, 47, 47],
-                    textColor: [255, 255, 255]
-                },
-                margin: { horizontal: 60 }
-            });
-
-            // Footer
-            doc.setFontSize(12);
-            doc.text("Date: " + new Date().toLocaleDateString(), 50, 160);
-            doc.text("Authorized Signature", 240, 160, { align: 'right' });
-
-            // Save PDF
-            doc.save(`Certificate_${student.rollNo}_${student.name.replace(/ /g, '_')}.pdf`);
         }
 
         // Search when Enter key is pressed
