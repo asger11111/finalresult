@@ -1,688 +1,355 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Examination Results</title>
-  <style>
-    /* Google Fonts */
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-
-    /* General Styles */
-    body {
-      font-family: 'Roboto', sans-serif;
-      background-color: #f8f8f8;
-      margin: 0;
-      padding: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    .search-container {
-      background-color: #fff;
-      border: 2px solid #d32f2f;
-      border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      padding: 20px;
-      max-width: 600px;
-      width: 100%;
-      overflow-y: auto;
-      max-height: 90vh;
-      position: relative;
-      text-align: center;
-    }
-
-    .result-container {
-      background-color: #fff;
-      border: 2px solid #d32f2f;
-      border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      padding: 20px;
-      max-width: 600px;
-      width: 100%;
-      overflow-y: auto;
-      max-height: 90vh;
-      position: relative;
-      display: none;
-    }
-
-    .header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .header h1 {
-      color: #d32f2f;
-      font-size: 24px;
-      margin: 0 0 10px 0;
-    }
-
-    #searchInput {
-      width: 80%;
-      padding: 12px 15px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      font-size: 16px;
-      margin-bottom: 20px;
-    }
-
-    .student-details {
-      margin-bottom: 20px;
-    }
-
-    .student-details h2 {
-      color: #d32f2f;
-      font-size: 20px;
-      margin-bottom: 10px;
-    }
-
-    .student-details p {
-      margin: 5px 0;
-      font-size: 16px;
-    }
-
-    .date-time {
-      margin-bottom: 20px;
-      font-size: 16px;
-      color: #555;
-    }
-
-    .marks-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-    }
-
-    .marks-table th,
-    .marks-table td {
-      border: 1px solid #ddd;
-      padding: 10px;
-      text-align: center;
-    }
-
-    .marks-table th {
-      background-color: #d32f2f;
-      color: #fff;
-    }
-
-    .marks-table tr:nth-child(even) {
-      background-color: #f9f9f9;
-    }
-
-    .footer {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 14px;
-      color: #777;
-    }
-
-    .download-button {
-      display: none;
-      margin: 20px auto 0;
-      padding: 10px 20px;
-      background-color: #d32f2f;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    .download-button:hover {
-      background-color: #b71c1c;
-    }
-
-    .no-results {
-      color: #d32f2f;
-      font-size: 18px;
-      margin: 20px 0;
-      display: none;
-    }
-
-    .back-button {
-      margin: 10px auto 0;
-      padding: 8px 16px;
-      background-color: #555;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    .back-button:hover {
-      background-color: #333;
-    }
-
-    @media (max-width: 480px) {
-      .header h1 {
-        font-size: 20px;
-      }
-
-      .student-details h2 {
-        font-size: 18px;
-      }
-
-      .student-details p {
-        font-size: 14px;
-      }
-
-      .date-time {
-        font-size: 14px;
-      }
-
-      .marks-table th,
-      .marks-table td {
-        padding: 8px;
-        font-size: 14px;
-      }
-
-      .download-button {
-        font-size: 14px;
-        padding: 8px 16px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Spoken English - Results</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffebee 100%);
+            min-height: 100vh;
+            padding: 15px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            animation: fadeIn 0.8s ease-out;
+            border-top: 5px solid #d32f2f;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        h1 {
+            text-align: center;
+            color: #d32f2f;
+            margin-bottom: 15px;
+            font-size: 24px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        .search-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+        .search-input-container {
+            display: flex;
+            width: 100%;
+            max-width: 500px;
+        }
+        .search-box input {
+            padding: 12px 15px;
+            width: 100%;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px 0 0 5px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s;
+        }
+        .search-box input:focus {
+            border-color: #d32f2f;
+            box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.2);
+        }
+        .search-box button {
+            padding: 12px 20px;
+            background: #d32f2f;
+            color: white;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        .search-box button:hover {
+            background: #b71c1c;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            animation: fadeIn 0.8s ease-out;
+            display: none;
+            font-size: 14px;
+        }
+        th, td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        th {
+            background: #d32f2f;
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+        tr:hover {
+            background: #ffebee;
+        }
+        .highlight {
+            background: #ffcdd2 !important;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { background-color: #ffcdd2; }
+            50% { background-color: #ffebee; }
+            100% { background-color: #ffcdd2; }
+        }
+        .download-btn {
+            padding: 6px 12px;
+            background: #d32f2f;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+        .download-btn:hover {
+            background: #b71c1c;
+        }
+        .no-results {
+            text-align: center;
+            padding: 20px;
+            color: #d32f2f;
+            font-weight: 500;
+            display: none;
+        }
+        .welcome-message {
+            text-align: center;
+            color: #666;
+            margin: 30px 0;
+            font-size: 16px;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            h1 {
+                font-size: 20px;
+            }
+            h2 {
+                font-size: 16px;
+            }
+            th, td {
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+            .download-btn {
+                padding: 4px 8px;
+                font-size: 11px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="search-container" id="searchPage">
-    <div class="header">
-      <h1>Global Spoken English</h1>
+    <div class="container">
+        <h1>Global Spoken English</h1>
+        <h2>Student Results Portal</h2>
+        
+        <div class="search-box">
+            <div class="search-input-container">
+                <input type="text" id="searchInput" placeholder="Enter your Name or Roll No.">
+                <button onclick="searchResult()">Search</button>
+            </div>
+        </div>
+
+        <p class="welcome-message">Please enter your name or roll number and press Enter to view your result</p>
+
+        <div class="no-results" id="noResults">
+            No results found! Please check your details and try again.
+        </div>
+
+        <table id="resultsTable">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Roll No.</th>
+                    <th>Name</th>
+                    <th>Father's Name</th>
+                    <th>Max Marks</th>
+                    <th>Obtained</th>
+                    <th>Certificate</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- Results loaded via JS -->
+            </tbody>
+        </table>
     </div>
 
-    <input type="text" id="searchInput" placeholder="Enter Student ID or Name and press Enter" onkeypress="handleKeyPress(event)">
-    <div class="no-results" id="noResults">No student found with that ID or Name. Please try again.</div>
+    <script>
+        // Initialize jsPDF
+        const { jsPDF } = window.jspdf;
 
-    <div class="footer">
-      <p>© 2025 Global Spoken English. All rights reserved.</p>
-    </div>
-  </div>
+        // Student Data
+        const students = [
+            { rank: 1, rollNo: "S-Ramzan-12", name: "Mohd Aashique", fatherName: "Mohd Naushad Rain", maxMarks: 100, obtainedMarks: 73.25 },
+            { rank: 2, rollNo: "S-Ramzan-10", name: "Abdul Razique", fatherName: "Abdul Rajja", maxMarks: 100, obtainedMarks: 68.25 },
+            { rank: 3, rollNo: "S-Ramzan-02", name: "Md Sahil", fatherName: "Md Rahmatullah", maxMarks: 100, obtainedMarks: 63.25 },
+            { rank: 4, rollNo: "S-Ramzan-03", name: "Md Aman", fatherName: "Md Imteyaz", maxMarks: 100, obtainedMarks: 63 },
+            { rank: 5, rollNo: "S-Ramzan-01", name: "Abdul Wahid", fatherName: "Mohd Alam", maxMarks: 100, obtainedMarks: 60 },
+            { rank: 6, rollNo: "S-Ramzan-", name: "Md Gulzar", fatherName: "Md Rahmat", maxMarks: 100, obtainedMarks: 56.5 },
+            { rank: 7, rollNo: "S-Ramzan-05", name: "Md Waris", fatherName: "Mohammad Niroj", maxMarks: 100, obtainedMarks: 55.5 },
+            { rank: 8, rollNo: "S-Ramzan-", name: "Merajuddin", fatherName: "Mohd Mehtab", maxMarks: 100, obtainedMarks: 54.5 },
+            { rank: 9, rollNo: "S-Ramzan-28", name: "Md Arif Raza", fatherName: "Afzal Devan", maxMarks: 100, obtainedMarks: 52 },
+            { rank: 10, rollNo: "S-Ramzan-02", name: "Md Sahil Khan", fatherName: "Md Nasim", maxMarks: 100, obtainedMarks: 52 }
+        ];
 
-  <div class="result-container" id="resultDisplay">
-    <div class="header">
-      <h1>Student Examination Results</h1>
-    </div>
+        // Search function
+        function searchResult() {
+            const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+            const welcomeMsg = document.querySelector('.welcome-message');
+            const table = document.getElementById('resultsTable');
+            const noResults = document.getElementById('noResults');
+            
+            // Hide welcome message
+            welcomeMsg.style.display = 'none';
+            
+            if (!searchTerm) {
+                table.style.display = 'none';
+                noResults.style.display = 'none';
+                welcomeMsg.style.display = 'block';
+                return;
+            }
 
-    <div class="student-details">
-      <h2>Student Details</h2>
-      <p><strong>Name:</strong> <span id="studentName"></span></p>
-      <p><strong>Father's Name:</strong> <span id="fatherName"></span></p>
-      <p><strong>Student ID:</strong> <span id="studentId"></span></p>
-      <p><strong>WhatsApp Number:</strong> <span id="whatsappNumber"></span></p>
-      <p><strong>Address:</strong> <span id="studentAddress"></span></p>
-      <p><strong>Madarsa Name:</strong> <span id="madarsaName"></span></p>
-      <p><strong>Madarsa Address:</strong> <span id="madarsaAddress"></span></p>
-    </div>
-
-    <div class="date-time" id="resultDeclaredDate"></div>
-
-    <table class="marks-table">
-      <thead>
-        <tr>
-          <th>Subject</th>
-          <th>Marks Obtained</th>
-          <th>Gracing Marks</th>
-          <th>Total Marks</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Examination</td>
-          <td id="marksObtainedCell"></td>
-          <td id="gracingMarksCell"></td>
-          <td id="totalMarksCell"></td>
-        </tr>
-      </tbody>
-    </table>
-
-    <button class="back-button" onclick="backToSearch()">Back to Search</button>
-
-    <div class="footer">
-      <p>© 2025 Global Spoken English. All rights reserved.</p>
-    </div>
-
-    <button class="download-button" id="downloadButton">Download Result as Image</button>
-  </div>
-
-  <script>
-    // Complete Student data array
-    const students = [
-      {
-        id: "S-Ramzan-03",
-        name: "Muhammad Mustafa Raza",
-        father: "Mr. Saiyad Ahmad",
-        phone: "9935045479",
-        address: "Saiyad Raja Chandauli",
-        madarsa: "Jamiatul Madina Faizan E Shadrush Shariah",
-        madarsaAddress: "Kashi Vidyapeeth Gate No.1 Cantt Banaras",
-        marksObtained: "82.25",
-        gracingMarks: "0",
-        totalMarks: "82.25"
-      },
-      {
-        id: "S-Ramzan-05",
-        name: "Rehan Raza Khan",
-        father: "Mr. Ghulam Rabbani Khan",
-        phone: "9621955272",
-        address: "Jaunpur",
-        madarsa: "Jamiatul Madina Faizan E Sadru Shreya",
-        madarsaAddress: "Banaras",
-        marksObtained: "17.5",
-        gracingMarks: "29.5",
-        totalMarks: "47"
-      },
-      {
-        id: "S-Ramzan-08",
-        name: "Mohammad Dilshan",
-        father: "Mr. Abdul Nadir",
-        phone: "9956970336",
-        address: "Khargupur, Hathi Bazar, Varanasi",
-        madarsa: "Jamiatul Madina Faizan-E-Sadrush Shariyah",
-        madarsaAddress: "Kashi Vidyapeeth, Banaras",
-        marksObtained: "87.5",
-        gracingMarks: "0",
-        totalMarks: "87.5"
-      },
-      {
-        id: "S-Ramzan-09",
-        name: "Owesh Raza",
-        father: "Mr. M.D Muslim Raine",
-        phone: "7348696091",
-        address: "Kidwai Nagar, Jangipur, Ghazipur",
-        madarsa: "Faizan E Sadru Sariya",
-        madarsaAddress: "Banaras",
-        marksObtained: "37.5",
-        gracingMarks: "9.5",
-        totalMarks: "47"
-      },
-      {
-        id: "S-Ramzan-11",
-        name: "Shadan Rizvi",
-        father: "Mr. Ghulam Rasool Rizvi",
-        phone: "9721224372",
-        address: "Purani Basti, Mubarakpur, Azamgarh",
-        madarsa: "Faizan E Mufti Azam Hind",
-        madarsaAddress: "Shahjahanpur, U.P",
-        marksObtained: "89.25",
-        gracingMarks: "0",
-        totalMarks: "89.25"
-      },
-      {
-        id: "S-Ramzan-12",
-        name: "Mohammad Ameen",
-        father: "Mr. Ekhlak Ahmad",
-        phone: "-",
-        address: "-",
-        madarsa: "-",
-        madarsaAddress: "-",
-        marksObtained: "62",
-        gracingMarks: "0",
-        totalMarks: "62"
-      },
-      {
-        id: "S-Ramzan-13",
-        name: "Ziyaur Rahman",
-        father: "Mr. Imteyaz Ahmad",
-        phone: "9621955272",
-        address: "Bhatkol, Dhaurahara, District-Mau, UP",
-        madarsa: "Madrasa Ashrafia Sirajul Uloom",
-        madarsaAddress: "Nevada, Mubarakpur, Azamgarh",
-        marksObtained: "46.75",
-        gracingMarks: "0.25",
-        totalMarks: "47"
-      },
-      {
-        id: "S-Ramzan-14",
-        name: "Faijan Ahammad",
-        father: "Mr. Faiz Alam",
-        phone: "8016971658",
-        address: "Shibpur, Madhabpur, Kaliyaganj, WB",
-        madarsa: "Madrasa Darul Uloom Mahbub-E-Yazdani",
-        madarsaAddress: "Baskhari, Ambedkar Nagar, UP",
-        marksObtained: "0",
-        gracingMarks: "0",
-        totalMarks: "-1"
-      },
-      {
-        id: "S-Ramzan-15",
-        name: "Amee (Jabed Ansari)",
-        father: "Mr. Sarfuddin Ansari",
-        phone: "8207589860",
-        address: "Pochari, Dhanbad, Jharkhand",
-        madarsa: "Jamiatur Raza, Bareilly Shareef",
-        madarsaAddress: "Mathurapur Bareilly Shareef, UP",
-        marksObtained: "30.5",
-        gracingMarks: "16.5",
-        totalMarks: "47"
-      },
-      {
-        id: "S-Ramzan-16",
-        name: "Akbar Ali",
-        father: "Mr. Abdul Latif",
-        phone: "6295894542",
-        address: "Chhota Burihan, Utter Dinajpur, WB",
-        madarsa: "Centre of Islamic Studies Jamia Tur Raza",
-        madarsaAddress: "Mathura Pur C.B Ganj, Bareilly Shareef",
-        marksObtained: "87.75",
-        gracingMarks: "0",
-        totalMarks: "87.75"
-      },
-      {
-        id: "S-Ramzan-17",
-        name: "Mohammad Majibullah",
-        father: "Mr. Habibullah Ansari",
-        phone: "7219897257",
-        address: "Shivpuri Tola, Shri Nagar, Maharajganj",
-        madarsa: "Darul Uloom Ahle Sunnat Yaralyia Faizurrasool",
-        madarsaAddress: "Naudihwan Sekhuani, Maharajganj",
-        marksObtained: "41.5",
-        gracingMarks: "5.5",
-        totalMarks: "47"
-      },
-      {
-        id: "S-Ramzan-18",
-        name: "Md Nazim Raza",
-        father: "Mr. Farid Alam",
-        phone: "8276930910",
-        address: "Bhenglibhita Kiomari, Kishanganj, Bihar",
-        madarsa: "Jamiatur Raza",
-        madarsaAddress: "Mathurapur C.B Ganj, Bareilly Sharif",
-        marksObtained: "74.75",
-        gracingMarks: "0",
-        totalMarks: "74.75"
-      },
-      {
-        id: "S-Ramzan-19",
-        name: "Waseem Ahmed",
-        father: "Mr. Navi Jaan",
-        phone: "8859255312",
-        address: "Chhitauni, Shahabad, Rampur",
-        madarsa: "Jamiya Farooqiya Azizul Uloom",
-        madarsaAddress: "Bhojpur, Distt Muradabad",
-        marksObtained: "94.5",
-        gracingMarks: "0",
-        totalMarks: "94.5"
-      },
-      {
-        id: "S-Ramzan-23",
-        name: "Niyajul Ansari",
-        father: "Mr. Akhtar Ansari",
-        phone: "8294669570",
-        address: "Sholey Patan Plamu",
-        madarsa: "Quadria Nooria Bagharhu",
-        madarsaAddress: "Bagharhu, Sonebhadra",
-        marksObtained: "81.75",
-        gracingMarks: "0",
-        totalMarks: "81.75"
-      },
-      {
-        id: "S-24",
-        name: "Mohammad Sajid",
-        father: "Mr. Habibullah",
-        phone: "9517454342",
-        address: "Badagaw Purvi, Ghosipurvi, Ghosi",
-        madarsa: "Madarsa Shamsul Uloom",
-        madarsaAddress: "Ghosi Mau",
-        marksObtained: "24",
-        gracingMarks: "23",
-        totalMarks: "47"
-      },
-      {
-        id: "S-Ramzan-32",
-        name: "Waris Ali",
-        father: "Mr. Nizamuddin",
-        phone: "7310484496",
-        address: "New Colony, Molvi Chak Bargo, Gorakhpur",
-        madarsa: "Darul Uloom Alimia Jamda Shahi",
-        madarsaAddress: "Jamda Shahi, Basti",
-        marksObtained: "94",
-        gracingMarks: "0",
-        totalMarks: "94"
-      },
-      {
-        id: "S-Ramzan-34",
-        name: "Noore Alam",
-        father: "Mr. Lal Mohammad",
-        phone: "-",
-        address: "Maharajganj",
-        madarsa: "Darul Uloom Hasainiya",
-        madarsaAddress: "Gorakhpur",
-        marksObtained: "49.75",
-        gracingMarks: "0",
-        totalMarks: "49.75"
-      },
-      {
-        id: "S-Ramzan-35",
-        name: "Najrul Ansari",
-        father: "Mr. Naimodin Ansari",
-        phone: "8528694825",
-        address: "Purandra East Champaran, Bihar",
-        madarsa: "Jamia Arabiya Talimuddin",
-        madarsaAddress: "Maunath Bhanjan",
-        marksObtained: "0",
-        gracingMarks: "0",
-        totalMarks: "-1"
-      },
-      {
-        id: "S-Ramzan-36",
-        name: "Mohammad Tanvir Alam",
-        father: "Mr. Zulkanain Ahmad",
-        phone: "8081439707",
-        address: "Budhadih Kalan Maharajganj",
-        madarsa: "Madarsa Arbiya Aziziya Mazharul Uloom",
-        madarsaAddress: "Nichlaul",
-        marksObtained: "60",
-        gracingMarks: "0",
-        totalMarks: "60"
-      },
-      {
-        id: "S-Ramzan-38",
-        name: "Mohd Irfan",
-        father: "Mr. Rafeeq Ahmad",
-        phone: "9690244287",
-        address: "Rustampur",
-        madarsa: "Jamiatur Raza",
-        madarsaAddress: "Bareilly Shareef",
-        marksObtained: "71.5",
-        gracingMarks: "0",
-        totalMarks: "71.5"
-      },
-      {
-        id: "S-Ramzan-39",
-        name: "Samir Shekh",
-        father: "Mr. Azizul Shaikh",
-        phone: "9119815825586",
-        address: "Sarlahi, Nepal",
-        madarsa: "Jam-e-Ashraf",
-        madarsaAddress: "Ambedkar Nagar, U.P.",
-        marksObtained: "55.5",
-        gracingMarks: "0",
-        totalMarks: "55.5"
-      },
-      {
-        id: "S-Ramzan-41",
-        name: "Ali Sher",
-        father: "Mr. Yunus",
-        phone: "8796583516",
-        address: "Usarha, Gorakhpur",
-        madarsa: "Darul Uloom Ahle Sunnat Ishatul Islam",
-        madarsaAddress: "Partawal",
-        marksObtained: "50.75",
-        gracingMarks: "0",
-        totalMarks: "50.75"
-      },
-      {
-        id: "S-Ramzan-42",
-        name: "Akhtar Ali",
-        father: "Mr. Munshi Raza",
-        phone: "9967563484",
-        address: "Singhpur, Tharauli, Maharajganj",
-        madarsa: "Darul Uloom Ahle Sunnat Gulshane Taiba",
-        madarsaAddress: "Basti",
-        marksObtained: "41.5",
-        gracingMarks: "5.5",
-        totalMarks: "47"
-      },
-      {
-        id: "S-Ramzan-46",
-        name: "Aatif Husain",
-        father: "Mr. Irfan Ahmad",
-        phone: "9598467612",
-        address: "Patwad Saraiyya, Azamghad",
-        madarsa: "Madrasatul Madina Faizan E Siddique E Akbar",
-        madarsaAddress: "Ghulami Kapoora, Azamghad",
-        marksObtained: "23.75",
-        gracingMarks: "23.25",
-        totalMarks: "47"
-      },
-      {
-        id: "S-Ramzan-47",
-        name: "Sayed Ahteshamuddin",
-        father: "Mr. Sayed Kamal Ahmed",
-        phone: "8429806107",
-        address: "Bargadhi, Balrampur",
-        madarsa: "Darul Uloom Alimia",
-        madarsaAddress: "Jamda Shahi, Basti",
-        marksObtained: "0",
-        gracingMarks: "0",
-        totalMarks: "-1"
-      },
-      {
-        id: "S-Ramzan-48",
-        name: "Mujeeb Ashraf",
-        father: "Mr. Muhammad Mahbub Azizi",
-        phone: "9170934753",
-        address: "Alinagar, Mubarakpur, Azamgarh",
-        madarsa: "Faizan E Attar",
-        madarsaAddress: "Nepalgunj, Nepal",
-        marksObtained: "43.5",
-        gracingMarks: "3.5",
-        totalMarks: "47"
-      },
-      {
-        id: "S-23",
-        name: "Mohammad Shahbaz",
-        father: "Mr. Reyaz Ahmad",
-        phone: "7991952368",
-        address: "Karisath-mau",
-        madarsa: "Shamsul Uloom",
-        madarsaAddress: "Ghosi Mau",
-        marksObtained: "24.75",
-        gracingMarks: "22.25",
-        totalMarks: "47"
-      }
-    ];
-
-    // Function to display result declared date
-    function displayResultDeclaredDate() {
-      const now = new Date();
-      const options = { year: 'numeric', month: 'long', day: 'numeric' };
-      const dateString = now.toLocaleDateString('en-IN', options);
-      document.getElementById("resultDeclaredDate").innerText = `Result Declared Date: ${dateString}`;
-    }
-
-    // Function to handle Enter key press
-    function handleKeyPress(event) {
-      if (event.key === 'Enter') {
-        searchStudent();
-      }
-    }
-
-    // Function to search students
-    function searchStudent() {
-      const input = document.getElementById('searchInput');
-      const filter = input.value.toUpperCase();
-      const searchPage = document.getElementById('searchPage');
-      const resultDisplay = document.getElementById('resultDisplay');
-      const noResults = document.getElementById('noResults');
-      
-      let found = false;
-      
-      for (let i = 0; i < students.length; i++) {
-        const student = students[i];
-        if (student.id.toUpperCase() === filter || 
-            student.name.toUpperCase().includes(filter)) {
-          
-          // Display the student data
-          document.getElementById('studentName').textContent = student.name;
-          document.getElementById('fatherName').textContent = student.father;
-          document.getElementById('studentId').textContent = student.id;
-          document.getElementById('whatsappNumber').textContent = student.phone;
-          document.getElementById('studentAddress').textContent = student.address;
-          document.getElementById('madarsaName').textContent = student.madarsa;
-          document.getElementById('madarsaAddress').textContent = student.madarsaAddress;
-          
-          // Display marks in the correct cells
-          document.getElementById('marksObtainedCell').textContent = student.marksObtained;
-          document.getElementById('gracingMarksCell').textContent = student.gracingMarks;
-          document.getElementById('totalMarksCell').textContent = student.totalMarks;
-          
-          displayResultDeclaredDate();
-          
-          searchPage.style.display = 'none';
-          resultDisplay.style.display = 'block';
-          noResults.style.display = 'none';
-          
-          // Show download button after 2 seconds
-          setTimeout(() => {
-            document.getElementById("downloadButton").style.display = "block";
-          }, 2000);
-          
-          found = true;
-          break;
+            const foundStudents = students.filter(student => 
+                student.name.toLowerCase().includes(searchTerm) || 
+                student.rollNo.toLowerCase().includes(searchTerm)
+            );
+            
+            if (foundStudents.length > 0) {
+                // Show table with results
+                loadTable(foundStudents);
+                table.style.display = 'table';
+                noResults.style.display = 'none';
+                
+                // Scroll to table
+                setTimeout(() => {
+                    table.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 300);
+            } else {
+                // Show no results message
+                table.style.display = 'none';
+                noResults.style.display = 'block';
+            }
         }
-      }
-      
-      if (!found) {
-        noResults.style.display = 'block';
-      }
-    }
 
-    // Function to display download time on the result
-    function displayDownloadTime() {
-      const now = new Date();
-      const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-      const dateTimeString = now.toLocaleDateString('en-IN', options);
-      const downloadTime = document.createElement("p");
-      downloadTime.innerText = `Downloaded On: ${dateTimeString}`;
-      downloadTime.style.textAlign = "center";
-      downloadTime.style.color = "#555";
-      downloadTime.style.marginTop = "10px";
-      document.getElementById("resultDisplay").appendChild(downloadTime);
-    }
+        // Load data into table
+        function loadTable(data) {
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+            
+            data.forEach(student => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${student.rank}</td>
+                    <td>${student.rollNo}</td>
+                    <td>${student.name}</td>
+                    <td>${student.fatherName}</td>
+                    <td>${student.maxMarks}</td>
+                    <td>${student.obtainedMarks}</td>
+                    <td><button class="download-btn" onclick="downloadCertificate('${student.rollNo}')">Download</button></td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
 
-    // Function to download result as image
-    function downloadResult() {
-      const downloadButton = document.getElementById("downloadButton");
-      downloadButton.style.display = "none";
-      displayDownloadTime();
-      const resultContainer = document.getElementById("resultDisplay");
-      html2canvas(resultContainer, { scale: 2 }).then((canvas) => {
-        const link = document.createElement("a");
-        link.download = `${document.getElementById('studentName').textContent}_result.png`;
-        link.href = canvas.toDataURL("image/png");
-        link.click();
-        downloadButton.style.display = "block";
-      });
-    }
+        // Generate PDF certificate
+        function downloadCertificate(rollNo) {
+            const student = students.find(s => s.rollNo === rollNo);
+            if (!student) return;
 
-    // Function to go back to search page
-    function backToSearch() {
-      document.getElementById('searchPage').style.display = 'block';
-      document.getElementById('resultDisplay').style.display = 'none';
-      document.getElementById('searchInput').value = '';
-      document.getElementById('noResults').style.display = 'none';
-      document.getElementById('downloadButton').style.display = 'none';
-    }
+            const doc = new jsPDF({
+                orientation: 'landscape',
+                unit: 'mm'
+            });
 
-    // Initialize
-    window.onload = function() {
-      document.getElementById('downloadButton').addEventListener('click', downloadResult);
-      displayResultDeclaredDate();
-    };
-  </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+            // Add decorative border
+            doc.setDrawColor(211, 47, 47);
+            doc.setLineWidth(1);
+            doc.rect(10, 10, 277, 190);
+
+            // Header
+            doc.setFontSize(24);
+            doc.setTextColor(211, 47, 47);
+            doc.text("GLOBAL SPOKEN ENGLISH", 148, 30, { align: 'center' });
+            
+            doc.setFontSize(18);
+            doc.text("Certificate of Achievement", 148, 40, { align: 'center' });
+
+            // Student details
+            doc.setFontSize(14);
+            doc.setTextColor(0, 0, 0);
+            doc.text(`This is to certify that`, 148, 60, { align: 'center' });
+            
+            doc.setFontSize(24);
+            doc.setTextColor(211, 47, 47);
+            doc.text(student.name, 148, 75, { align: 'center' });
+            
+            doc.setFontSize(14);
+            doc.setTextColor(0, 0, 0);
+            doc.text(`son/daughter of ${student.fatherName}`, 148, 85, { align: 'center' });
+            doc.text(`has successfully completed the course with the following marks:`, 148, 95, { align: 'center' });
+
+            // Marks table
+            doc.autoTable({
+                startY: 110,
+                head: [['Roll No.', 'Max Marks', 'Obtained Marks', 'Percentage', 'Rank']],
+                body: [
+                    [
+                        student.rollNo, 
+                        student.maxMarks, 
+                        student.obtainedMarks,
+                        `${(student.obtainedMarks/student.maxMarks*100).toFixed(2)}%`,
+                        student.rank
+                    ]
+                ],
+                theme: 'grid',
+                headStyles: { 
+                    fillColor: [211, 47, 47],
+                    textColor: [255, 255, 255]
+                },
+                margin: { horizontal: 60 }
+            });
+
+            // Footer
+            doc.setFontSize(12);
+            doc.text("Date: " + new Date().toLocaleDateString(), 50, 160);
+            doc.text("Authorized Signature", 240, 160, { align: 'right' });
+
+            // Save PDF
+            doc.save(`Certificate_${student.rollNo}_${student.name.replace(/ /g, '_')}.pdf`);
+        }
+
+        // Search when Enter key is pressed
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchResult();
+            }
+        });
+    </script>
 </body>
 </html>
