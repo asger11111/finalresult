@@ -218,6 +218,9 @@
             { rank: 10, rollNo: "S-Ramzan-02", name: "Md Sahil Khan", fatherName: "Md Nasim", maxMarks: 100, obtainedMarks: 52 }
         ];
 
+        // Store currently displayed students
+        let currentDisplayedStudents = [];
+
         // Search function
         function searchResult() {
             const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
@@ -232,17 +235,18 @@
                 table.style.display = 'none';
                 noResults.style.display = 'none';
                 welcomeMsg.style.display = 'block';
+                currentDisplayedStudents = [];
                 return;
             }
 
-            const foundStudents = students.filter(student => 
+            currentDisplayedStudents = students.filter(student => 
                 student.name.toLowerCase().includes(searchTerm) || 
                 student.rollNo.toLowerCase().includes(searchTerm)
             );
             
-            if (foundStudents.length > 0) {
+            if (currentDisplayedStudents.length > 0) {
                 // Show table with results
-                loadTable(foundStudents);
+                loadTable(currentDisplayedStudents);
                 table.style.display = 'table';
                 noResults.style.display = 'none';
                 
@@ -254,6 +258,7 @@
                 // Show no results message
                 table.style.display = 'none';
                 noResults.style.display = 'block';
+                currentDisplayedStudents = [];
             }
         }
 
@@ -271,17 +276,26 @@
                     <td>${student.fatherName}</td>
                     <td>${student.maxMarks}</td>
                     <td>${student.obtainedMarks}</td>
-                    <td><button class="download-btn" onclick="downloadCertificate('${student.rollNo}')">Download</button></td>
+                    <td><button class="download-btn" onclick="downloadCurrentResult('${student.rollNo}')">Download</button></td>
                 `;
                 tableBody.appendChild(row);
             });
         }
 
-        // Generate PDF certificate
-        function downloadCertificate(rollNo) {
-            const student = students.find(s => s.rollNo === rollNo);
-            if (!student) return;
+        // Download current result
+        function downloadCurrentResult(rollNo) {
+            // Find the student in currently displayed results
+            const student = currentDisplayedStudents.find(s => s.rollNo === rollNo);
+            if (!student) {
+                alert("Student data not found. Please search again.");
+                return;
+            }
 
+            generatePDF(student);
+        }
+
+        // Generate PDF certificate
+        function generatePDF(student) {
             const doc = new jsPDF({
                 orientation: 'landscape',
                 unit: 'mm'
